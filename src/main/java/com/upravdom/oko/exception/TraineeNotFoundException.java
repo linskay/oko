@@ -1,4 +1,4 @@
-package com.upravdom.oko.exeption;
+package com.upravdom.oko.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

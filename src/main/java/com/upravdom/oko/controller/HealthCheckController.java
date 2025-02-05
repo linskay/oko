@@ -25,7 +25,7 @@ public class HealthCheckController {
     @Value("${spring.application.name}")
     private String appName;
 
-    @Value("${build.version}")
+    @Value("${app.version}")
     private String appVersion;
 
     /**
