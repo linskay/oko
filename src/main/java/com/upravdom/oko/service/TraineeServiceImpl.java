@@ -1,39 +1,44 @@
 package com.upravdom.oko.service;
 
-import com.upravdom.oko.model.City;
-import com.upravdom.oko.model.Trainee;
-import com.upravdom.oko.repositoriy.CityRepository;
+import com.upravdom.oko.entity.Trainee;
+import com.upravdom.oko.service.TraineeService;
 import com.upravdom.oko.repositoriy.TraineeRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
+@Transactional
 public class TraineeServiceImpl implements TraineeService {
-    private static final Logger logger = LoggerFactory.getLogger(TraineeServiceImpl.class);
 
     @Autowired
     private TraineeRepository traineeRepository;
-    @Autowired
-    private CityRepository cityRepository;
 
     @Override
-    public Trainee createTrainee(String name, String lastName, Integer cityId) {
-        logger.info("Attempting to create new trainee with name: {}, lastName: {}, cityId: {}", name, lastName, cityId);
-        City city = null;
-        try{
-            city = cityRepository.findById(cityId)
-                    .orElseThrow(() -> new IllegalArgumentException("City not found with id: " + cityId));
-        }catch (IllegalArgumentException e){
-            logger.error("Error creating trainee: {}", e.getMessage());
-            throw e;
-        }
+    public List<Trainee> getAllTrainees() {
+        return traineeRepository.findAll();
+    }
 
-        Trainee trainee = new Trainee(lastName, name, city);
-        Trainee savedTrainee = traineeRepository.save(trainee);
-        logger.info("Successfully created trainee with id: {}", savedTrainee.getId());
+    @Override
+    public Trainee getTraineeById(Long id) {
+        return traineeRepository.findById(id).orElseThrow(() -> new RuntimeException("Trainee not found"));
+    }
 
-        return savedTrainee;
+    @Override
+    public Trainee addTrainee(Trainee trainee) {
+        return traineeRepository.save(trainee);
+    }
+
+    @Override
+    public Trainee updateTrainee(Long id, Trainee trainee) {
+        trainee.setId(id);
+        return traineeRepository.save(trainee);
+    }
+
+    @Override
+    public void deleteTrainee(Long id) {
+        traineeRepository.deleteById(id);
     }
 }
